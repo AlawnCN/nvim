@@ -6,3 +6,5 @@ debug
 foo.*
 *.log
 data
+.neoconf.json
+lazy-lock.json

@@ -20,7 +20,7 @@ return {
         end,
     },
 
-    { "nyoom-engineering/oxocarbon.nvim"}, 
+    { "nyoom-engineering/oxocarbon.nvim"},
 
     -- add gruvbox
     -- { "ellisonleao/gruvbox.nvim" },
@@ -40,6 +40,77 @@ return {
         "folke/trouble.nvim",
         -- opts will be merged with the parent spec
         opts = { use_diagnostic_signs = true },
+    },
+
+    -- noice config 
+    {
+        "folke/noice.nvim",
+        enabled = true,
+        event = "VeryLazy",
+        dependencies = {
+            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+            "MunifTanjim/nui.nvim",
+            -- OPTIONAL:
+            --   `nvim-notify` is only needed, if you want to use the notification view.
+            --   If not available, we use `mini` as the fallback
+            "rcarriga/nvim-notify",
+        },
+        -- opts will be merged with the parent spec
+        opts = {
+            lsp = {
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    ["cmp.entry.get_documentation"] = true,
+                },
+            },
+            routes = {
+                {
+                    filter = {
+                        event = "msg_show",
+                        find = "%d+L, %d+B",
+                    },
+                    view = "mini",
+                },
+            },
+            presets = {
+                bottom_search = true,
+                command_palette = true,
+                long_message_to_split = true,
+                inc_rename = true,
+            },
+            cmdline = {
+                enabled = true, -- enables the Noice cmdline UI
+                view = "cmdline_popup", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+                opts = {}, -- global options for the cmdline. See section on views
+                ---@type table<string, CmdlineFormat>
+                format = {
+                    -- conceal: (default=true) This will hide the text in the cmdline that matches the pattern.
+                    -- view: (default is cmdline view)
+                    -- opts: any options passed to the view
+                    -- icon_hl_group: optional hl_group for the icon
+                    -- title: set to anything or empty string to hide
+                    cmdline = { pattern = "^:", icon = "", lang = "vim" },
+                    search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
+                    search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+                    filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+                    lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+                    help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
+                    input = {}, -- Used by input()
+                    -- lua = false, -- to disable a format, set to `false`
+                },
+            },
+            messages = {
+                -- NOTE: If you enable messages, then the cmdline is enabled automatically.
+                -- This is a current Neovim limitation.
+                enabled = false, -- enables the Noice messages UI
+                view = "notify", -- default view for messages
+                view_error = "notify", -- view for errors
+                view_warn = "notify", -- view for warnings
+                view_history = "messages", -- view for :messages
+                view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+            },
+        },
     },
 
     -- disable trouble
@@ -210,6 +281,48 @@ return {
 
     -- use mini.starter instead of alpha
     -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
+
+    -- alpha config
+    {  
+        "goolord/alpha-nvim",
+        opts = function()
+            local dashboard = require("alpha.themes.dashboard")
+            local logo = [[
+  ______  __                                __     __ ______ __       __
+ /      \|  \                              |  \   |  \      \  \     /  \
+|  ▓▓▓▓▓▓\ ▓▓ ______  __   __   __ _______ | ▓▓   | ▓▓\▓▓▓▓▓▓ ▓▓\   /  ▓▓
+| ▓▓__| ▓▓ ▓▓|      \|  \ |  \ |  \       \| ▓▓   | ▓▓ | ▓▓ | ▓▓▓\ /  ▓▓▓           Z
+| ▓▓    ▓▓ ▓▓ \▓▓▓▓▓▓\ ▓▓ | ▓▓ | ▓▓ ▓▓▓▓▓▓▓\\▓▓\ /  ▓▓ | ▓▓ | ▓▓▓▓\  ▓▓▓▓       Z
+| ▓▓▓▓▓▓▓▓ ▓▓/      ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ \▓▓\  ▓▓  | ▓▓ | ▓▓\▓▓ ▓▓ ▓▓    z
+| ▓▓  | ▓▓ ▓▓  ▓▓▓▓▓▓▓ ▓▓_/ ▓▓_/ ▓▓ ▓▓  | ▓▓  \▓▓ ▓▓  _| ▓▓_| ▓▓ \▓▓▓| ▓▓  z
+| ▓▓  | ▓▓ ▓▓\▓▓    ▓▓\▓▓   ▓▓   ▓▓ ▓▓  | ▓▓   \▓▓▓  |   ▓▓ \ ▓▓  \▓ | ▓▓
+ \▓▓   \▓▓\▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓\▓▓▓▓ \▓▓   \▓▓    \▓    \▓▓▓▓▓▓\▓▓      \▓▓
+            ]]
+
+            dashboard.section.header.val = vim.split(logo, "\n")
+            dashboard.section.buttons.val = {
+                dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+                dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+                dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+                dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+                dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+                dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+                dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),
+                dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+            }
+            for _, button in ipairs(dashboard.section.buttons.val) do
+                button.opts.hl = "AlphaButtons"
+                button.opts.hl_shortcut = "AlphaShortcut"
+            end
+            dashboard.section.header.opts.hl = "AlphaHeader"
+            dashboard.section.buttons.opts.hl = "AlphaButtons"
+            dashboard.section.footer.opts.hl = "AlphaFooter"
+            dashboard.opts.layout[1].val = 8
+            return dashboard
+        end
+
+
+    },
 
     -- add jsonls and schemastore ans setup treesitter for json, json5 and jsonc
     { import = "lazyvim.plugins.extras.lang.json" },

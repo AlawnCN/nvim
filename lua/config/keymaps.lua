@@ -19,12 +19,24 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
+-- if vim.fn.has("gui_running") == 1 then
+--   print("gui is running")
+-- else
+--   print("gui not running")
+-- end
+
 -- Next Tab
 map("n", "<D-l>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+map("i", "<D-l>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+map("n", "<D-]>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+map("i", "<D-]>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 --
 -- Previous Tab
 map("n", "<D-h>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
---
+map("i", "<D-h>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+map("n", "<D-[>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+map("i", "<D-[>", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+
 -- New Tab
 map("n", "<D-t>", "<cmd>tabnew<cr>", { desc = "New Tab" })
 map("i", "<D-t>", "<esc><cmd>tabnew<cr>", { desc = "New Tab" })

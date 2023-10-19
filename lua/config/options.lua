@@ -3,6 +3,8 @@
 -- Add any additional options here
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.layervim_auto_update = 0
+
 
 -- local opt = vim.opt
 
@@ -49,7 +51,10 @@ vim.opt.updatetime = 200 -- Save swap file and trigger CursorHold
 vim.opt.wildmode = "longest:full,full" -- Command-line completion mode
 vim.opt.winminwidth = 5 -- Minimum window width
 vim.opt.wrap = false -- Disable line wrap
+vim.opt.wrap = true -- Enable line wrap
+vim.opt.wrap = true
 vim.opt.encoding = "UTF-8"
+vim.opt.fileencodings=ucsbom,utf8,cp936,gbk,gb18030,big5,eucjp,euckr,latin1
 vim.opt.showtabline = 1
 vim.o.incsearch = true
 

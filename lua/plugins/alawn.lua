@@ -189,7 +189,8 @@ return {
         dependencies = {
             "jose-elias-alvarez/typescript.nvim",
             init = function()
-                require("lazyvim.util").on_attach(function(_, buffer)
+                -- require("lazyvim.util").on_attach(function(_, buffer)
+                require("lazyvim.util").lsp.on_attach(function(_, buffer)
                     -- stylua: ignore
                     vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
                     vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
@@ -301,7 +302,8 @@ return {
 
             dashboard.section.header.val = vim.split(logo, "\n")
             dashboard.section.buttons.val = {
-                dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+                -- dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+                dashboard.button("f", "󱈅 " .. " Find file", ":Telescope find_files <CR>"),
                 dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
                 dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
                 dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),

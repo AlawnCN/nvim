@@ -21,3 +21,11 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.b.autoformat = false
   end,
 })
+
+-- customm command
+-- vim.api.nvim_create_user_command('Json', ':set filetype=json', { nargs = 1 })
+vim.api.nvim_create_user_command('Json', ':set filetype=json', { nargs = 0 })
+vim.api.nvim_create_user_command('Xml', ':set filetype=xml', { nargs = 0 })
+vim.api.nvim_create_user_command('Java', ':set filetype=java', { nargs = 0 })
+vim.api.nvim_create_user_command('Sql', ':set filetype=sql', { nargs = 0 })
+

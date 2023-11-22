@@ -1,10 +1,24 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
+-- Resolve keymap on macOS
+vim.keymap.set({ 'i', 'n' }, '<D-a>', '<ESC>ggVG')                              -- select all
+vim.keymap.set({ 'i', 'n' }, '<D-w>', function() close_tab() end)               -- close tab
+vim.keymap.set({ 'i', 'n' }, '<D-[>', function() vim.cmd('BufferPrevious') end) -- previous tab
+vim.keymap.set({ 'i', 'n' }, '<D-]>', function() vim.cmd('BufferNext') end)     -- next tab
+vim.keymap.set('i', '<D-t>', '<C-o>:tabnew<CR><ESC>')                           -- new tab (insert)
+vim.keymap.set('n', '<D-t>', ':tabnew<CR>')                                     -- new tab (insert)
+vim.keymap.set('i', '<D-s>', '<C-o>:w<CR>')                                     -- save (insert)
+vim.keymap.set('n', '<D-s>', ':w<CR>')                                          -- save (normal)
+vim.keymap.set('x', '<D-x>', '"+d')                                             -- cut
+vim.keymap.set('x', '<D-c>', '"+y')                                             -- copy
+vim.keymap.set('i', '<D-v>', '<C-r><C-o>+')                                     -- paste (insert)
+vim.keymap.set('n', '<D-v>', 'i<C-r><C-o>+<ESC>l')                              -- paste (normal)
+vim.keymap.set('x', '<D-v>', '"+P')                                             -- paste (visual)
+vim.keymap.set('c', '<D-v>', '<C-r>+')                                          -- paste (command)
 
 -- This file is automatically loaded by lazyvim.config.init
 --local Util = require("lazyvim.util")
-
 local function map(mode, lhs, rhs, opts)
   local keys = require("lazy.core.handler").handlers.keys
   ---@cast keys LazyKeysHandler
@@ -67,6 +81,7 @@ map("n", "<D-6>", "<CMD>tabnext 6<CR>", { desc = "Switch to tab 6" })
 map("n", "<D-7>", "<CMD>tabnext 7<CR>", { desc = "Switch to tab 7" })
 map("n", "<D-8>", "<CMD>tabnext 8<CR>", { desc = "Switch to tab 8" })
 map("n", "<D-9>", "<CMD>tabnext 9<CR>", { desc = "Switch to tab 9" })
+
 
 -- Close Tab
 map("n", "<D-w>", "<CMD>tabclose<CR>", { desc = "Close tab" })

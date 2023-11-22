@@ -283,48 +283,118 @@ return {
     -- use mini.starter instead of alpha
     -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
 
-    -- alpha config
-    {  
-        "goolord/alpha-nvim",
+
+    {
+        "nvimdev/dashboard-nvim",
+        event = "VimEnter",
+        dependencies = { {'nvim-tree/nvim-web-devicons'}},
         opts = function()
-            local dashboard = require("alpha.themes.dashboard")
-            local logo = [[
-  ______  __                                __     __ ______ __       __
- /      \|  \                              |  \   |  \      \  \     /  \
-|  ▓▓▓▓▓▓\ ▓▓ ______  __   __   __ _______ | ▓▓   | ▓▓\▓▓▓▓▓▓ ▓▓\   /  ▓▓
-| ▓▓__| ▓▓ ▓▓|      \|  \ |  \ |  \       \| ▓▓   | ▓▓ | ▓▓ | ▓▓▓\ /  ▓▓▓           Z
-| ▓▓    ▓▓ ▓▓ \▓▓▓▓▓▓\ ▓▓ | ▓▓ | ▓▓ ▓▓▓▓▓▓▓\\▓▓\ /  ▓▓ | ▓▓ | ▓▓▓▓\  ▓▓▓▓       Z
-| ▓▓▓▓▓▓▓▓ ▓▓/      ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ \▓▓\  ▓▓  | ▓▓ | ▓▓\▓▓ ▓▓ ▓▓    z
-| ▓▓  | ▓▓ ▓▓  ▓▓▓▓▓▓▓ ▓▓_/ ▓▓_/ ▓▓ ▓▓  | ▓▓  \▓▓ ▓▓  _| ▓▓_| ▓▓ \▓▓▓| ▓▓  z
-| ▓▓  | ▓▓ ▓▓\▓▓    ▓▓\▓▓   ▓▓   ▓▓ ▓▓  | ▓▓   \▓▓▓  |   ▓▓ \ ▓▓  \▓ | ▓▓
- \▓▓   \▓▓\▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓\▓▓▓▓ \▓▓   \▓▓    \▓    \▓▓▓▓▓▓\▓▓      \▓▓
-            ]]
+            local logo = 
+[[    __       ___             __       __   __  ___  _____  ___
+     /""\     |"  |           /""\     |"  |/  \|  "|(\"   \|"  \
+    /    \    ||  |          /    \    |'  /    \:  ||.\\   \    |
+   /' /\  \   |:  |         /' /\  \   |: /'        ||: \.   \\  |
+  //  __'  \   \  |___     //  __'  \   \//  /\'    ||.  \    \. |
+ /   /  \\  \ ( \_|:  \   /   /  \\  \  /   /  \\   ||    \    \ |
+(___/    \___) \_______) (___/    \___)|___/    \___| \___|\____\)
+]]
+            logo = string.rep("\n", 8) .. logo .. "\n\n"
 
-            dashboard.section.header.val = vim.split(logo, "\n")
-            dashboard.section.buttons.val = {
-                -- dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
-                dashboard.button("f", "󱈅 " .. " Find file", ":Telescope find_files <CR>"),
-                dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
-                dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
-                dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
-                dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-                dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
-                dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),
-                dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+            local opts = {
+                theme = "doom",
+                -- theme = "doom",
+                disable_move = true,
+                shortcut_type = "number",
+                hide = {
+                    -- this is taken care of by lualine
+                    -- enabling this messes up the actual laststatus setting after loading a file
+                    statusline = false,
+                    tabline = true,       -- hide the tabline
+                    winbar = true,        -- hide winbar
+                },
+                config = {
+                    header = vim.split(logo, "\n"),
+                    -- header = vim.split(logo, "\n"),
+                    -- stylua: ignore
+                    center = {
+                        { action = "Telescope find_files",                                     desc = " Find file",       icon = "󱈅 ", key = "f" },
+                        { action = "ene | startinsert",                                        desc = " New file",        icon = " ", key = "n" },
+                        { action = "Telescope oldfiles",                                       desc = " Recent files",    icon = " ", key = "r" },
+                        { action = "Telescope live_grep",                                      desc = " Find text",       icon = " ", key = "g" },
+                        { action = [[lua require("lazyvim.util").telescope.config_files()()]], desc = " Config",          icon = " ", key = "c" },
+                        { action = 'lua require("persistence").load()',                        desc = " Restore Session", icon = " ", key = "s" },
+                        { action = "LazyExtras",                                               desc = " Lazy Extras",     icon = " ", key = "x" },
+                        { action = "Lazy",                                                     desc = " Lazy",            icon = "󰒲 ", key = "l" },
+                        { action = "qa",                                                       desc = " Quit",            icon = " ", key = "q" },
+                    },
+                    footer = function()
+                        local stats = require("lazy").stats()
+                        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+                        return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
+                    end,
+                },
             }
-            for _, button in ipairs(dashboard.section.buttons.val) do
-                button.opts.hl = "AlphaButtons"
-                button.opts.hl_shortcut = "AlphaShortcut"
+
+            for _, button in ipairs(opts.config.center) do
+                button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
             end
-            dashboard.section.header.opts.hl = "AlphaHeader"
-            dashboard.section.buttons.opts.hl = "AlphaButtons"
-            dashboard.section.footer.opts.hl = "AlphaFooter"
-            dashboard.opts.layout[1].val = 8
-            return dashboard
-        end
 
+            -- close Lazy and re-open when the dashboard is ready
+            if vim.o.filetype == "lazy" then
+                vim.cmd.close()
+                vim.api.nvim_create_autocmd("User", {
+                    pattern = "DashboardLoaded",
+                    callback = function()
+                        require("lazy").show()
+                    end,
+                })
+            end
 
+            return opts
+        end,
     },
+    -- alpha config
+    -- {  
+    --     "goolord/alpha-nvim",
+    --     opts = function()
+    --         local dashboard = require("alpha.themes.dashboard")
+    --         local logo = [[
+  -- ______  __                                __     __ ______ __       __
+ -- /      \|  \                              |  \   |  \      \  \     /  \
+-- |  ▓▓▓▓▓▓\ ▓▓ ______  __   __   __ _______ | ▓▓   | ▓▓\▓▓▓▓▓▓ ▓▓\   /  ▓▓
+-- | ▓▓__| ▓▓ ▓▓|      \|  \ |  \ |  \       \| ▓▓   | ▓▓ | ▓▓ | ▓▓▓\ /  ▓▓▓           Z
+-- | ▓▓    ▓▓ ▓▓ \▓▓▓▓▓▓\ ▓▓ | ▓▓ | ▓▓ ▓▓▓▓▓▓▓\\▓▓\ /  ▓▓ | ▓▓ | ▓▓▓▓\  ▓▓▓▓       Z
+-- | ▓▓▓▓▓▓▓▓ ▓▓/      ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ \▓▓\  ▓▓  | ▓▓ | ▓▓\▓▓ ▓▓ ▓▓    z
+-- | ▓▓  | ▓▓ ▓▓  ▓▓▓▓▓▓▓ ▓▓_/ ▓▓_/ ▓▓ ▓▓  | ▓▓  \▓▓ ▓▓  _| ▓▓_| ▓▓ \▓▓▓| ▓▓  z
+-- | ▓▓  | ▓▓ ▓▓\▓▓    ▓▓\▓▓   ▓▓   ▓▓ ▓▓  | ▓▓   \▓▓▓  |   ▓▓ \ ▓▓  \▓ | ▓▓
+ -- \▓▓   \▓▓\▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓\▓▓▓▓ \▓▓   \▓▓    \▓    \▓▓▓▓▓▓\▓▓      \▓▓
+    --         ]]
+
+    --         dashboard.section.header.val = vim.split(logo, "\n")
+    --         dashboard.section.buttons.val = {
+    --             -- dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+    --             dashboard.button("f", "󱈅 " .. " Find file", ":Telescope find_files <CR>"),
+    --             dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+    --             dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+    --             dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+    --             dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+    --             dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+    --             dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),
+    --             dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+    --         }
+    --         for _, button in ipairs(dashboard.section.buttons.val) do
+    --             button.opts.hl = "AlphaButtons"
+    --             button.opts.hl_shortcut = "AlphaShortcut"
+    --         end
+    --         dashboard.section.header.opts.hl = "AlphaHeader"
+    --         dashboard.section.buttons.opts.hl = "AlphaButtons"
+    --         dashboard.section.footer.opts.hl = "AlphaFooter"
+    --         dashboard.opts.layout[1].val = 8
+    --         return dashboard
+    --     end
+
+
+    -- },
 
     -- add jsonls and schemastore ans setup treesitter for json, json5 and jsonc
     { import = "lazyvim.plugins.extras.lang.json" },

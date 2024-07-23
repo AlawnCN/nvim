@@ -10,7 +10,56 @@
 -- * override the configuration of LazyVim plugins
 return {
     {
+        "akinsho/bufferline.nvim",
+        config = function()
+            require("bufferline").setup {
+                options = {
+                    numbers = "ordinal", -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+                    mode = "tabs", -- 只显示标签页
+                    separator_style = "slant",      -- 选择标签页之间的分隔符样式 "slant" | "slope" | "thick" | "thin" | { 'any', 'any' },
+                    always_show_bufferline = false, -- 如果没有打开的标签页则隐藏标签栏
+                    show_buffer_close_icons = false,-- 隐藏缓冲区关闭图标
+                    show_close_icon = false,        -- 隐藏关闭图标
+                    show_tab_indicators = false,    -- 显示标签页指示器
+                    enforce_regular_tabs = true,    -- 强制所有标签页具有相同宽度
+                    show_buffer_icons = true , -- disable filetype icons for buffers
+                    -- show_duplicate_prefix = true , -- whether to show duplicate buffer prefix
+                    -- duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
+                }
+            }
+        end,
+    },
+    {'echasnovski/mini.align', version = '*'},
+    -- {
+    --     "nvim-tree/nvim-tree.lua",
+    --     requires = {
+    --         "nvim-tree/nvim-web-devicons", -- optional, for file icons
+    --     },
+    --     config = function()
+    --         require("nvim-tree").setup {
+    --             view = {
+    --                 width = 30,
+    --                 side = "left",
+    --                 adaptive_size = true,
+    --             },
+    --             renderer = {
+    --                 group_empty = true,
+    --             },
+    --             filters = {
+    --                 dotfiles = false,
+    --             },
+    --             actions = {
+    --                 open_file = {
+    --                     quit_on_open = true, -- 打开文件后关闭nvim-tree
+    --                 },
+    --             },
+    --             open_on_tab = true, -- 在新标签页中打开nvim-tree
+    --         }
+    --     end
+    -- },
+    {
         "toppair/peek.nvim",
+        -- enabled = false,
         event = { "BufRead", "BufNewFile" },
         build = "deno task --quiet build:fast",
         config = function()
@@ -22,22 +71,23 @@ return {
 
     { "nyoom-engineering/oxocarbon.nvim"},
 
-    -- add gruvbox
+    -- add gruvbox  Notice:moved to colorscheme.lua
     -- { "ellisonleao/gruvbox.nvim" },
 
     -- Configure LazyVim to load gruvbox
-    {
-        "LazyVim/LazyVim",
-        opts = {
-            -- colorscheme = "gruvbox",
-            -- colorscheme = "oxocarbon",
-            colorscheme = "catppuccin",
-        },
-    },
+    -- {
+    --     "LazyVim/LazyVim",
+    --     opts = {
+    --         -- colorscheme = "gruvbox",
+    --         -- colorscheme = "oxocarbon",
+    --         colorscheme = "catppuccin",
+    --     },
+    -- },
 
     -- change trouble config
     {
         "folke/trouble.nvim",
+        enabled = false, -- disable trouble
         -- opts will be merged with the parent spec
         opts = { use_diagnostic_signs = true },
     },
@@ -46,6 +96,7 @@ return {
     {
         "folke/noice.nvim",
         enabled = true,
+        -- enabled = false,
         event = "VeryLazy",
         dependencies = {
             -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
@@ -113,8 +164,6 @@ return {
         },
     },
 
-    -- disable trouble
-    { "folke/trouble.nvim", enabled = false },
 
     -- add symbols-outline
     {
@@ -230,8 +279,12 @@ return {
             ensure_installed = {
                 "bash",
                 "html",
+                "java",
+                "bash",
                 "javascript",
                 "json",
+                "xml",
+                "sql",
                 "lua",
                 "markdown",
                 "markdown_inline",
@@ -283,14 +336,14 @@ return {
     -- use mini.starter instead of alpha
     -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
 
-
     {
         "nvimdev/dashboard-nvim",
+        enabled = false,
         event = "VimEnter",
         dependencies = { {'nvim-tree/nvim-web-devicons'}},
         opts = function()
             local logo = 
-[[    __       ___             __       __   __  ___  _____  ___
+            [[    __       ___             __       __   __  ___  _____  ___
      /""\     |"  |           /""\     |"  |/  \|  "|(\"   \|"  \
     /    \    ||  |          /    \    |'  /    \:  ||.\\   \    |
    /' /\  \   |:  |         /' /\  \   |: /'        ||: \.   \\  |
@@ -317,7 +370,7 @@ return {
                     -- header = vim.split(logo, "\n"),
                     -- stylua: ignore
                     center = {
-                        { action = "Telescope find_files",                                     desc = " Find file",       icon = "󱈅 ", key = "f" },
+                        -- { action = "Telescope find_files",                                     desc = " Find file",       icon = "󱈅 ", key = "f" },
                         { action = "ene | startinsert",                                        desc = " New file",        icon = " ", key = "n" },
                         { action = "Telescope oldfiles",                                       desc = " Recent files",    icon = " ", key = "r" },
                         { action = "Telescope live_grep",                                      desc = " Find text",       icon = " ", key = "g" },
@@ -359,15 +412,15 @@ return {
     --     opts = function()
     --         local dashboard = require("alpha.themes.dashboard")
     --         local logo = [[
-  -- ______  __                                __     __ ______ __       __
- -- /      \|  \                              |  \   |  \      \  \     /  \
--- |  ▓▓▓▓▓▓\ ▓▓ ______  __   __   __ _______ | ▓▓   | ▓▓\▓▓▓▓▓▓ ▓▓\   /  ▓▓
--- | ▓▓__| ▓▓ ▓▓|      \|  \ |  \ |  \       \| ▓▓   | ▓▓ | ▓▓ | ▓▓▓\ /  ▓▓▓           Z
--- | ▓▓    ▓▓ ▓▓ \▓▓▓▓▓▓\ ▓▓ | ▓▓ | ▓▓ ▓▓▓▓▓▓▓\\▓▓\ /  ▓▓ | ▓▓ | ▓▓▓▓\  ▓▓▓▓       Z
--- | ▓▓▓▓▓▓▓▓ ▓▓/      ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ \▓▓\  ▓▓  | ▓▓ | ▓▓\▓▓ ▓▓ ▓▓    z
--- | ▓▓  | ▓▓ ▓▓  ▓▓▓▓▓▓▓ ▓▓_/ ▓▓_/ ▓▓ ▓▓  | ▓▓  \▓▓ ▓▓  _| ▓▓_| ▓▓ \▓▓▓| ▓▓  z
--- | ▓▓  | ▓▓ ▓▓\▓▓    ▓▓\▓▓   ▓▓   ▓▓ ▓▓  | ▓▓   \▓▓▓  |   ▓▓ \ ▓▓  \▓ | ▓▓
- -- \▓▓   \▓▓\▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓\▓▓▓▓ \▓▓   \▓▓    \▓    \▓▓▓▓▓▓\▓▓      \▓▓
+    -- ______  __                                __     __ ______ __       __
+    -- /      \|  \                              |  \   |  \      \  \     /  \
+    -- |  ▓▓▓▓▓▓\ ▓▓ ______  __   __   __ _______ | ▓▓   | ▓▓\▓▓▓▓▓▓ ▓▓\   /  ▓▓
+    -- | ▓▓__| ▓▓ ▓▓|      \|  \ |  \ |  \       \| ▓▓   | ▓▓ | ▓▓ | ▓▓▓\ /  ▓▓▓           Z
+    -- | ▓▓    ▓▓ ▓▓ \▓▓▓▓▓▓\ ▓▓ | ▓▓ | ▓▓ ▓▓▓▓▓▓▓\\▓▓\ /  ▓▓ | ▓▓ | ▓▓▓▓\  ▓▓▓▓       Z
+    -- | ▓▓▓▓▓▓▓▓ ▓▓/      ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ \▓▓\  ▓▓  | ▓▓ | ▓▓\▓▓ ▓▓ ▓▓    z
+    -- | ▓▓  | ▓▓ ▓▓  ▓▓▓▓▓▓▓ ▓▓_/ ▓▓_/ ▓▓ ▓▓  | ▓▓  \▓▓ ▓▓  _| ▓▓_| ▓▓ \▓▓▓| ▓▓  z
+    -- | ▓▓  | ▓▓ ▓▓\▓▓    ▓▓\▓▓   ▓▓   ▓▓ ▓▓  | ▓▓   \▓▓▓  |   ▓▓ \ ▓▓  \▓ | ▓▓
+    -- \▓▓   \▓▓\▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓\▓▓▓▓ \▓▓   \▓▓    \▓    \▓▓▓▓▓▓\▓▓      \▓▓
     --         ]]
 
     --         dashboard.section.header.val = vim.split(logo, "\n")

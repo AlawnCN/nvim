@@ -84,11 +84,20 @@ map("n", "<D-9>", "<CMD>tabnext 9<CR>", { desc = "Switch to tab 9" })
 
 
 -- Close Tab
-map("n", "<D-w>", "<CMD>tabclose<CR>", { desc = "Close tab" })
-map("i", "<D-w>", "<ESC><CMD>tabclose<CR>", { desc = "Close tab" })
+-- map("n", "<D-w>", "<CMD>tabclose<CR>", { desc = "Close tab" })
+-- map("i", "<D-w>", "<ESC><CMD>tabclose<CR>", { desc = "Close tab" })
+map("n", "<D-w>", "<CMD>bw<CR>", { desc = "Close tab" })
+map("i", "<D-w>", "<ESC><CMD>bw<CR>", { desc = "Close tab" })
+
+-- map("n", "<D-/>", "\C", { desc = "Close tab" })
+-- map("v", "<D-/>", "\C", { desc = "Close tab" })
 
 -- Align Table
-map("n", "<D-e>", "gaip|<CR>", { desc = "Align table" })
+-- map("x", "<D-e>", "ga", { desc = "Align table" })
+-- map("n", "<D-e>", "ga", { desc = "Align table" })
+-- map("t", "<D-e>", "ga", { desc = "Align table" })
+-- map("i", "<D-e>", "ga", { desc = "Align table" })
+-- map("v", "<D-e>", "ga", { desc = "Align table" })
 
 -- map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move down" })
 -- map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move up" })

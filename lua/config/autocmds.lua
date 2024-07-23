@@ -28,4 +28,12 @@ vim.api.nvim_create_user_command('Json', ':set filetype=json', { nargs = 0 })
 vim.api.nvim_create_user_command('Xml', ':set filetype=xml', { nargs = 0 })
 vim.api.nvim_create_user_command('Java', ':set filetype=java', { nargs = 0 })
 vim.api.nvim_create_user_command('Sql', ':set filetype=sql', { nargs = 0 })
+vim.api.nvim_create_user_command('Auto',':tabnew ~/.config/nvim/lua/config/autocmds.lua', { nargs = 0 })
+vim.api.nvim_create_user_command('Opt', ':tabnew ~/.config/nvim/lua/config/options.lua', { nargs = 0 })
+vim.api.nvim_create_user_command('Key', ':tabnew ~/.config/nvim/lua/config/keymaps.lua', { nargs = 0 })
+vim.api.nvim_create_user_command('Plugin',':tabnew ~/.config/nvim/lua/plugins/', { nargs = 0 })
+vim.api.nvim_create_user_command('Init',':tabnew ~/.config/nvim/init.lua', { nargs = 0 })
+-- vim.cmd([[
+-- cnoreabbrev <expr> q getcmdtype() == ':' && getcmdline() == 'q' ? 'bd' : 'q'
+-- ]])
 

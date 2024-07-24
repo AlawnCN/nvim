@@ -22,13 +22,16 @@ return {
                     show_close_icon = false,        -- 隐藏关闭图标
                     show_tab_indicators = false,    -- 显示标签页指示器
                     enforce_regular_tabs = true,    -- 强制所有标签页具有相同宽度
-                    show_buffer_icons = true , -- disable filetype icons for buffers
-                    -- show_duplicate_prefix = true , -- whether to show duplicate buffer prefix
-                    -- duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
+                    show_buffer_icons = true ,      -- disable filetype icons for buffers
+                    show_duplicate_prefix = false , -- whether to show duplicate buffer prefix
+                    themable = true,
+                    --duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
                 }
             }
         end,
     },
+    {"sindrets/diffview.nvim"}, -- git diff view
+    {"sainnhe/edge"},  -- Clean & Elegant Color Scheme inspired by Atom One and Material
     {'echasnovski/mini.align', version = '*'},
     -- {
     --     "nvim-tree/nvim-tree.lua",
@@ -96,8 +99,8 @@ return {
     {
         "folke/noice.nvim",
         enabled = true,
-        -- enabled = false,
         event = "VeryLazy",
+        optional = true,
         dependencies = {
             -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
             "MunifTanjim/nui.nvim",
@@ -119,13 +122,18 @@ return {
                 {
                     filter = {
                         event = "msg_show",
-                        find = "%d+L, %d+B",
+                        -- find = "%d+L, %d+B",
+                        any = {
+                            { find = "%d+L, %d+B" },
+                            { find = "; after #%d+" },
+                            { find = "; before #%d+" },
+                        },
                     },
                     view = "mini",
                 },
-            },
-            presets = {
-                bottom_search = true,
+                presets = {
+                    bottom_search = true,
+                -- bottom_search = false,
                 command_palette = true,
                 long_message_to_split = true,
                 inc_rename = true,
@@ -159,7 +167,8 @@ return {
                 view_error = "notify", -- view for errors
                 view_warn = "notify", -- view for warnings
                 view_history = "messages", -- view for :messages
-                view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+                -- view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+                view_search = "false", -- view for search count messages. Set to `false` to disable
             },
         },
     },
@@ -314,22 +323,159 @@ return {
     },
 
     -- the opts function can also be used to change the default opts:
-    {
-        "nvim-lualine/lualine.nvim",
-        event = "VeryLazy",
-        opts = function(_, opts)
-            table.insert(opts.sections.lualine_x, "😄")
-        end,
-    },
+    -- {
+    --     "nvim-lualine/lualine.nvim",
+    --     event = "VeryLazy",
+    --     opts = function(_, opts)
+    --         table.insert(opts.sections.lualine_x, "😄")
+    --     end,
+    -- },
 
     -- or you can return new options to override all the defaults
+    -- {
+    --     "nvim-lualine/lualine.nvim",
+    --     event = "VeryLazy",
+    --     init = function()
+    --         vim.g.lualine_laststatus = vim.o.laststatus
+    --         if vim.fn.argc(-1) > 0 then
+    --             -- set an empty statusline till lualine loads
+    --             vim.o.statusline = " "
+    --         else
+    --             -- hide the statusline on the starter page
+    --             vim.o.laststatus = 0
+    --         end
+    --     end,
+    --     opts = function()
+    --         return {
+    --             --[[add your custom lualine config here]]
+    --         }
+    --     end,
+    -- },
+
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
+        init = function()
+            vim.g.lualine_laststatus = vim.o.laststatus
+            if vim.fn.argc(-1) > 0 then
+                -- set an empty statusline till lualine loads
+                vim.o.statusline = " "
+            else
+                -- hide the statusline on the starter page
+                vim.o.laststatus = 0
+            end
+        end,
         opts = function()
-            return {
-                --[[add your custom lualine config here]]
+            -- PERF: we don't need this lualine require madness 🤷
+            local lualine_require = require("lualine_require")
+            lualine_require.require = require
+
+            local icons = LazyVim.config.icons
+
+            vim.o.laststatus = vim.g.lualine_laststatus
+
+            local opts = {
+                options = {
+                    theme = "auto",
+                    globalstatus = vim.o.laststatus == 3,
+                    disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter" } },
+                },
+                sections = {
+                    lualine_a = { "mode" },
+                    lualine_b = { "branch" },
+
+                    lualine_c = {
+                        LazyVim.lualine.root_dir(),
+                        {
+                            "diagnostics",
+                            symbols = {
+                                error = icons.diagnostics.Error,
+                                warn = icons.diagnostics.Warn,
+                                info = icons.diagnostics.Info,
+                                hint = icons.diagnostics.Hint,
+                            },
+                        },
+                        { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+                        { LazyVim.lualine.pretty_path() },
+                    },
+                    lualine_x = {
+                        -- stylua: ignore
+                        {
+                            function() return require("noice").api.status.command.get() end,
+                            cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+                            color = function() return LazyVim.ui.fg("Statement") end,
+                        },
+                        -- stylua: ignore
+                        {
+                            function() return require("noice").api.status.mode.get() end,
+                            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+                            color = function() return LazyVim.ui.fg("Constant") end,
+                        },
+                        -- stylua: ignore
+                        {
+                            function() return "  " .. require("dap").status() end,
+                            cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+                            color = function() return LazyVim.ui.fg("Debug") end,
+                        },
+                        -- stylua: ignore
+                        {
+                            require("lazy.status").updates,
+                            cond = require("lazy.status").has_updates,
+                            color = function() return LazyVim.ui.fg("Special") end,
+                        },
+                        {
+                            "diff",
+                            symbols = {
+                                added = icons.git.added,
+                                modified = icons.git.modified,
+                                removed = icons.git.removed,
+                            },
+                            source = function()
+                                local gitsigns = vim.b.gitsigns_status_dict
+                                if gitsigns then
+                                    return {
+                                        added = gitsigns.added,
+                                        modified = gitsigns.changed,
+                                        removed = gitsigns.removed,
+                                    }
+                                end
+                            end,
+                        },
+                    },
+                    lualine_y = {
+                        { "progress", separator = " ", padding = { left = 1, right = 0 } },
+                        { "location", padding = { left = 0, right = 1 } },
+                    },
+                    lualine_z = {
+                        function()
+                            return " " .. os.date("%R")
+                        end,
+                    },
+                },
+                extensions = { "neo-tree", "lazy" },
             }
+
+            -- do not add trouble symbols if aerial is enabled
+            -- And allow it to be overriden for some buffer types (see autocmds)
+            if vim.g.trouble_lualine and LazyVim.has("trouble.nvim") then
+                local trouble = require("trouble")
+                local symbols = trouble.statusline({
+                    mode = "symbols",
+                    groups = {},
+                    title = false,
+                    filter = { range = true },
+                    format = "{kind_icon}{symbol.name:Normal}",
+                    hl_group = "lualine_c_normal",
+                })
+                table.insert(opts.sections.lualine_c, {
+                    symbols and symbols.get,
+                    cond = function()
+                        return vim.b.trouble_lualine ~= false and symbols.has()
+                    end,
+                })
+            end
+
+            return opts
         end,
     },
 
@@ -491,7 +637,8 @@ return {
             local cmp = require("cmp")
 
             opts.mapping = vim.tbl_extend("force", opts.mapping, {
-                ["<Tab>"] = cmp.mapping(function(fallback)
+                -- ["<Tab>"] = cmp.mapping(function(fallback)
+                ["<C-n>"] = cmp.mapping(function(fallback)
                     if cmp.visible() then
                         cmp.select_next_item()
                         -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
@@ -504,7 +651,8 @@ return {
                         fallback()
                     end
                 end, { "i", "s" }),
-                ["<S-Tab>"] = cmp.mapping(function(fallback)
+                -- ["<S-Tab>"] = cmp.mapping(function(fallback)
+                ["<C-p>"] = cmp.mapping(function(fallback)
                     if cmp.visible() then
                         cmp.select_prev_item()
                     elseif luasnip.jumpable(-1) then
@@ -513,6 +661,7 @@ return {
                         fallback()
                     end
                 end, { "i", "s" }),
+                ['<D-j>'] = cmp.mapping.complete(),
             })
         end,
     },

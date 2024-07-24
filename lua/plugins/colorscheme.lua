@@ -1,6 +1,11 @@
 return {
     -- add gruvbox
-    { "ellisonleao/gruvbox.nvim" },
+    { "ellisonleao/gruvbox.nvim",lazy = true,name = "gruvbox" }, 
+    { "olimorris/onedarkpro.nvim",lazy = true,name = "onedarkpro"  },
+    { "rose-pine/neovim" ,lazy = true,name = "neovim" },
+    { "nyoom-engineering/oxocarbon.nvim" },
+    { "projekt0n/github-nvim-theme" ,lazy = true,name = "github" },
+    { 'embark-theme/vim', as = "embark",lazy = true,name = "embark" },
     { "folke/tokyonight.nvim", lazy = true, 
         -- opts = { style = "moon" }, 
         opts = {
@@ -17,6 +22,7 @@ return {
         lazy = true,
         name = "catppuccin",
         opts = {
+            flavour = "mocha", -- latte, frappe, macchiato, mocha
             integrations = {
                 aerial = true,
                 alpha = true,
@@ -59,8 +65,13 @@ return {
         "LazyVim/LazyVim",
         opts = {
             -- colorscheme = "gruvbox",
-            colorscheme = "catppuccin",
+            -- colorscheme = "catppuccin",
+            -- colorscheme = "embark",
             -- colorscheme = "tokyonight",
+            -- colorscheme = "neovim",
+            -- colorscheme = "onedarkpro",
+            -- colorscheme = "habamax",
+            colorscheme = "oxocarbon",
         },
     }
 }

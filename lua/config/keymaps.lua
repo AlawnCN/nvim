@@ -89,8 +89,9 @@ map("n", "<D-9>", "<CMD>tabnext 9<CR>", { desc = "Switch to tab 9" })
 map("n", "<D-w>", "<CMD>bw<CR>", { desc = "Close tab" })
 map("i", "<D-w>", "<ESC><CMD>bw<CR>", { desc = "Close tab" })
 
--- map("n", "<D-/>", "\C", { desc = "Close tab" })
--- map("v", "<D-/>", "\C", { desc = "Close tab" })
+
+-- map("n", "<D-/>", "<CMD>normal gcc<CR>", { desc = "Comment code" })
+-- map("v", "<D-/>", "<CMD>normal gcc<CR>", { desc = "Comment code" })
 
 -- Align Table
 -- map("x", "<D-e>", "ga", { desc = "Align table" })

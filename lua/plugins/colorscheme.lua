@@ -65,13 +65,13 @@ return {
         "LazyVim/LazyVim",
         opts = {
             -- colorscheme = "gruvbox",
-            -- colorscheme = "catppuccin",
+            colorscheme = "catppuccin",
             -- colorscheme = "embark",
             -- colorscheme = "tokyonight",
             -- colorscheme = "neovim",
             -- colorscheme = "onedarkpro",
             -- colorscheme = "habamax",
-            colorscheme = "oxocarbon",
+            -- colorscheme = "oxocarbon",
         },
     }
 }

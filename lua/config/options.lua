@@ -56,9 +56,14 @@ vim.opt.wrap = false                   -- Disable line wrap
 vim.opt.wrap = true                    -- Enable line wrap
 vim.opt.wrap = true
 vim.opt.encoding = "UTF-8"
+-- vim.g.mkdp_browser = 'safari'
 vim.opt.fileencodings = ucsbom, utf8, cp936, gbk, gb18030, big5, eucjp, euckr, latin1
 vim.opt.showtabline = 1
 vim.o.incsearch = true
+
+-- vim.g.mkdp_browser = 'safari'
+-- vim.g.mkdp_browser = 'safari'
+vim.g.mkdp_browser = 'Min'
 
 vim.opt.background = "dark" -- set this to dark or light
 

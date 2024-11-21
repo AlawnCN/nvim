@@ -1,8 +1,16 @@
 return {
+    -- {
+    --     "iamcco/markdown-preview.nvim",
+    --     run = "cd app && yarn install",
+    --     config = function()
+    --         -- 插件的配置
+    --         vim.g.mkdp_browser = 'Safari'  -- 使用 'chrome' 或其他浏览器的名称
+    --     end,
+    -- },
     { "sindrets/diffview.nvim" }, -- git diff view
     {
         "RRethy/vim-illuminate",
-        enabled = false,
+        enabled = true,
         config = function()
             require('illuminate').configure {
                 delay = 100,             -- 光标停留多久后高亮显示
@@ -12,6 +20,7 @@ return {
         end
     },
     { "nvimdev/dashboard-nvim", enabled = false },
+    { "echasnovski/mini.pairs", enabled = false },
     { "sainnhe/edge" }, -- Clean & Elegant Color Scheme inspired by Atom One and Material
     { "echasnovski/mini.align", version = "*" },
     {
@@ -19,18 +28,19 @@ return {
         config = function()
             require("bufferline").setup {
                 options = {
-                    numbers = "ordinal",             -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
                     mode = "tabs",                   -- 只显示标签页
+                    numbers = "ordinal",             -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
                     separator_style = "slant",       -- 选择标签页之间的分隔符样式 "slant" | "slope" | "thick" | "thin" | { 'any', 'any' },
+                    close_command = "bdelete! %d",       -- can be a string | function, | false see "Mouse actions"
                     always_show_bufferline = false,  -- 如果没有打开的标签页则隐藏标签栏
                     show_buffer_close_icons = false, -- 隐藏缓冲区关闭图标
                     show_close_icon = false,         -- 隐藏关闭图标
                     show_tab_indicators = false,     -- 显示标签页指示器
                     enforce_regular_tabs = true,     -- 强制所有标签页具有相同宽度
                     show_buffer_icons = true,        -- disable filetype icons for buffers
-                    show_duplicate_prefix = false,   -- whether to show duplicate buffer prefix
+                    show_duplicate_prefix = true,   -- whether to show duplicate buffer prefix
                     themable = true,
-                    --duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
+                    -- duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
                 }
             }
         end,
@@ -124,8 +134,9 @@ return {
                 "typescript",
                 "java",
                 "xml",
-                -- "sql",
+                "sql",
                 "bash",
+                "vue",
             })
         end,
     },

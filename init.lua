@@ -1,13 +1,12 @@
 if vim.g.vscode then
     -- Vscode extension
+    require("config.lazy")
 else
     -- bootstrap lazy.vim, LazyVim and your plugins
     -- require("config.lazy")
     -- require("mini.align").setup()
     require("config.lazy")
 end
-
-
 
 
 if vim.g.neovide then
